@@ -1,8 +1,12 @@
 import React, { useRef, useState, useCallback } from 'react';
 import Webcam from 'react-webcam';
 import { createWorker } from 'tesseract.js';
-import { FiCamera, FiLoader, FiEye, FiRefreshCw, FiSettings, FiUpload, FiImage } from 'react-icons/fi';
+import { FiCamera, FiLoader, FiEye, FiRefreshCw, FiSettings, FiUpload, FiImage, FiZap } from 'react-icons/fi';
 import { preprocessImage, sharpenImage, upscaleImage } from '../utils/imageProcessing';
+import { aiService } from '../services/aiService';
+import EnhancedOCRResults from './EnhancedOCRResults';
+import APIKeyBanner from './APIKeyBanner';
+import type { EnhancedOCRResult } from '../services/aiService';
 import './OCRCamera.css';
 
 interface OCRResult {
@@ -16,6 +20,7 @@ interface OCRSettings {
   useUpscaling: boolean;
   ocrMode: string;
   language: string;
+  useAIEnhancement: boolean;
 }
 
 const OCRCamera: React.FC = () => {
@@ -23,18 +28,32 @@ const OCRCamera: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
+  const [enhancedResult, setEnhancedResult] = useState<EnhancedOCRResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAIProcessing, setIsAIProcessing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<'camera' | 'upload'>('camera');
+  const [connectionStatus, setConnectionStatus] = useState<string>('');
   const [settings, setSettings] = useState<OCRSettings>({
     usePreprocessing: true,
     useSharpening: false,
     useUpscaling: true,
     ocrMode: '6', // PSM_UNIFORM_BLOCK
-    language: 'spa'
+    language: 'spa',
+    useAIEnhancement: true
   });
+
+  const testOpenAIConnection = async () => {
+    setConnectionStatus('Probando conexión...');
+    const result = await aiService.testConnection();
+    setConnectionStatus(`${result.message} (${result.provider})`);
+    
+    if (!result.success) {
+      setError(result.message);
+    }
+  };
 
   const processImageWithEnhancements = (imageSrc: string): string => {
     if (!settings.usePreprocessing && !settings.useSharpening && !settings.useUpscaling) {
@@ -76,6 +95,8 @@ const OCRCamera: React.FC = () => {
     setIsLoading(true);
     setIsProcessing(true);
     setError(null);
+    setOcrResult(null);
+    setEnhancedResult(null);
     
     try {
       // Crear worker de Tesseract con configuración optimizada
@@ -103,12 +124,37 @@ const OCRCamera: React.FC = () => {
       // Procesar la imagen
       const { data: { text, confidence } } = await worker.recognize(processedImage);
       
-      setOcrResult({
+      const basicResult = {
         text: text.trim(),
         confidence: Math.round(confidence)
-      });
-
+      };
+      
+      setOcrResult(basicResult);
       await worker.terminate();
+
+      // Procesar con IA si está habilitado
+      if (settings.useAIEnhancement && basicResult.text.length > 0) {
+        setIsAIProcessing(true);
+        try {
+          const enhanced = await aiService.enhanceOCRResult(basicResult.text, settings.language);
+          setEnhancedResult(enhanced);
+        } catch (aiError) {
+          console.error('Error con IA:', aiError);
+          // Continuar sin IA si hay error
+          setEnhancedResult({
+            originalText: basicResult.text,
+            correctedText: basicResult.text,
+            documentType: { type: 'other', confidence: 0.5, description: 'Error en procesamiento IA' },
+            extractedData: {},
+            summary: 'Error generando resumen con IA',
+            confidence: 0.5,
+            timestamp: new Date()
+          });
+        } finally {
+          setIsAIProcessing(false);
+        }
+      }
+
     } catch (err) {
       setError('Error al procesar la imagen. Inténtalo de nuevo.');
       console.error('OCR Error:', err);
@@ -183,6 +229,11 @@ const OCRCamera: React.FC = () => {
 
   return (
     <div className="ocr-camera">
+      {/* Mostrar banner solo si la IA está habilitada pero no hay API Key */}
+      {settings.useAIEnhancement && !aiService.isAIAvailable() && (
+        <APIKeyBanner />
+      )}
+      
       <div className="input-mode-selector">
         <button 
           onClick={() => setInputMode('camera')}
@@ -334,6 +385,41 @@ const OCRCamera: React.FC = () => {
             <label>
               <input
                 type="checkbox"
+                checked={settings.useAIEnhancement}
+                onChange={(e) => setSettings(prev => ({ ...prev, useAIEnhancement: e.target.checked }))}
+              />
+              <FiZap className="ai-icon" />
+              <strong>Mejora con IA</strong>
+              <span className="setting-description">
+                Corrige errores y extrae datos estructurados
+                {!aiService.isAIAvailable() && (
+                  <span className="api-key-warning"> - ⚠️ IA no configurada</span>
+                )}
+              </span>
+            </label>
+            
+            {aiService.isAIAvailable() && (
+              <div className="ai-test-section">
+                <button 
+                  onClick={testOpenAIConnection}
+                  className="test-connection-btn"
+                  disabled={isProcessing}
+                >
+                  🔍 Probar Conexión IA
+                </button>
+                {connectionStatus && (
+                  <div className={`connection-status ${connectionStatus.includes('Error') || connectionStatus.includes('inválida') ? 'error' : 'success'}`}>
+                    {connectionStatus}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="setting-group">
+            <label>
+              <input
+                type="checkbox"
                 checked={settings.usePreprocessing}
                 onChange={(e) => setSettings(prev => ({ ...prev, usePreprocessing: e.target.checked }))}
               />
@@ -408,7 +494,17 @@ const OCRCamera: React.FC = () => {
         </div>
       )}
 
-      {ocrResult && (
+      {/* Resultados mejorados con IA */}
+      {enhancedResult && (
+        <EnhancedOCRResults 
+          result={enhancedResult} 
+          onRetry={() => processImage(uploadedImage || webcamRef.current?.getScreenshot() || '')}
+          isLoading={isAIProcessing}
+        />
+      )}
+
+      {/* Resultados básicos solo si no hay IA habilitada */}
+      {ocrResult && !settings.useAIEnhancement && (
         <div className="ocr-result">
           <h3>📝 Texto Detectado:</h3>
           <div className="result-content">

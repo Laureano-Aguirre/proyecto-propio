@@ -115,13 +115,18 @@
 }
 
 .feature-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left 0.7s ease;
 }
 
@@ -284,6 +289,14 @@
   margin: 2rem 0;
 }
 
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
 .cta-button {
   background: linear-gradient(45deg, #10b981, #34d399, #61dafb);
   background-size: 200% 200%;
@@ -299,21 +312,45 @@
   animation: gradientShift 3s ease infinite;
   position: relative;
   overflow: hidden;
+  min-width: 200px;
+}
+
+.cta-button.primary {
+  background: linear-gradient(45deg, #10b981, #34d399, #61dafb);
+}
+
+.cta-button.secondary {
+  background: linear-gradient(45deg, #f59e0b, #f97316, #ef4444);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.cta-button.secondary:hover {
+  box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .cta-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.6s ease;
 }
 
@@ -374,46 +411,52 @@
   .app-header h1 {
     font-size: 2.5rem;
   }
-  
+
   .ocr-icon {
     font-size: 3rem;
   }
-  
+
   .subtitle {
     font-size: 1.1rem;
   }
-  
+
   .hero-section h2 {
     font-size: 2rem;
   }
-  
+
   .hero-description {
     font-size: 1.1rem;
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .feature-card {
     padding: 2rem;
   }
-  
+
   .cta-button {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    min-width: 160px;
   }
-  
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .stats-section {
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .stat-number {
     font-size: 2rem;
   }
-  
+
   .app-main {
     gap: 3rem;
     padding: 2rem 1rem;
@@ -424,23 +467,23 @@
   .app-header {
     padding: 2rem 1rem;
   }
-  
+
   .app-header h1 {
     font-size: 2rem;
   }
-  
+
   .hero-section h2 {
     font-size: 1.8rem;
   }
-  
+
   .feature-card {
     padding: 1.5rem;
   }
-  
+
   .feature-icon {
     font-size: 2.5rem;
   }
-  
+
   .cta-button {
     padding: 1rem 2rem;
     font-size: 1rem;
@@ -452,21 +495,21 @@
   .app-header h1 {
     font-size: 3.5rem;
   }
-  
+
   .app-main {
     padding: 4rem 3rem;
     gap: 4rem;
   }
-  
+
   .card {
     padding: 4rem;
     max-width: 800px;
   }
-  
+
   .logos {
     gap: 3rem;
   }
-  
+
   .logo {
     height: 8em;
   }
@@ -476,17 +519,17 @@
   .app-header {
     padding: 4rem 3rem;
   }
-  
+
   .app-main {
     max-width: 1400px;
     padding: 5rem 4rem;
   }
-  
+
   .card {
     max-width: 900px;
     padding: 5rem;
   }
-  
+
   .app-header h1 {
     font-size: 4rem;
   }

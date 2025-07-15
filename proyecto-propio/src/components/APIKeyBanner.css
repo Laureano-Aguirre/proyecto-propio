@@ -1,0 +1,110 @@
+/* APIKeyBanner.css */
+.api-key-banner {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.banner-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+.banner-icon {
+  font-size: 24px;
+  color: #d97706;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.banner-text h4 {
+  margin: 0 0 8px 0;
+  color: #92400e;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.banner-text p {
+  margin: 0;
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.features svg {
+  font-size: 12px;
+  color: #10b981;
+  margin-right: 4px;
+}
+
+.banner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.get-key-btn {
+  background: #f59e0b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.get-key-btn:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .api-key-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .banner-content {
+    width: 100%;
+  }
+
+  .features {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .banner-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

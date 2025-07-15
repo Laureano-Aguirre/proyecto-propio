@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { formatDate } from './utils'
 import { useLocalStorage } from './hooks'
 import OCRCamera from './components/OCRCamera'
+import WazeAnalysis from './components/WazeAnalysis'
+import WazeTools from './components/WazeTools'
+import AIProviderStatus from './components/AIProviderStatus'
 import './App.css'
 
 function App() {
   const [theme, setTheme] = useLocalStorage('theme', 'light')
-  const [showOCR, setShowOCR] = useState(false)
+  const [currentView, setCurrentView] = useState<'home' | 'ocr' | 'waze'>('home')
   
   const currentDate = formatDate(new Date())
 
@@ -14,41 +17,64 @@ function App() {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
-  if (showOCR) {
+  // Vista OCR
+  if (currentView === 'ocr') {
     return (
       <div className={`app ${theme}`}>
         <header className="app-header">
           <h1>🔍 OCR con Cámara</h1>
           <p>Reconocimiento de texto en tiempo real</p>
-          <button onClick={() => setShowOCR(false)} className="back-button">
+          <button onClick={() => setCurrentView('home')} className="back-button">
             ← Volver al inicio
           </button>
         </header>
         <main className="app-main">
+          <AIProviderStatus />
           <OCRCamera />
         </main>
       </div>
     )
   }
 
+  // Vista Waze
+  if (currentView === 'waze') {
+    return (
+      <div className={`app ${theme}`}>
+        <header className="app-header">
+          <h1>🚦 Análisis de Tráfico Waze</h1>
+          <p>Análisis inteligente de tráfico en tiempo real</p>
+          <button onClick={() => setCurrentView('home')} className="back-button">
+            ← Volver al inicio
+          </button>
+        </header>
+        <main className="app-main">
+          <AIProviderStatus />
+          <WazeAnalysis />
+          <WazeTools alerts={[]} />
+        </main>
+      </div>
+    )
+  }
+
+  // Vista principal (home)
   return (
     <div className={`app ${theme}`}>
       <header className="app-header">
         <div className="ocr-hero">
           <div className="ocr-icon">👁️‍🗨️</div>
-          <h1>VisionText</h1>
-          <p className="subtitle">Reconocimiento óptico de caracteres con IA</p>
+          <h1>VisionText Pro</h1>
+          <p className="subtitle">OCR con IA + Análisis de Tráfico Inteligente</p>
           <p className="date">📅 {currentDate}</p>
         </div>
       </header>
 
       <main className="app-main">
         <div className="hero-section">
-          <h2>🔍 Convierte imágenes en texto al instante</h2>
+          <h2>🔍 Dos herramientas poderosas en una sola app</h2>
           <p className="hero-description">
-            Utiliza la potencia de la inteligencia artificial para extraer texto de cualquier imagen 
-            capturada con tu cámara web. Perfecto para digitalizar documentos, notas escritas a mano, 
-            carteles, libros y mucho más.
+            Combina reconocimiento óptico de caracteres con inteligencia artificial para extraer texto 
+            de imágenes, y análisis avanzado de tráfico en tiempo real con datos de Waze. 
+            Perfecto para digitalizar documentos y optimizar tus rutas urbanas.
           </p>
         </div>
 
@@ -66,6 +92,12 @@ function App() {
           </div>
           
           <div className="feature-card">
+            <div className="feature-icon">🚦</div>
+            <h3>Análisis de Tráfico</h3>
+            <p>Análisis inteligente de tráfico en tiempo real con datos de Waze</p>
+          </div>
+          
+          <div className="feature-card">
             <div className="feature-icon">⚙️</div>
             <h3>Personalizable</h3>
             <p>Ajusta configuraciones de procesamiento según tu tipo de contenido</p>
@@ -76,15 +108,29 @@ function App() {
             <h3>Multiidioma</h3>
             <p>Soporte para español, inglés, francés, alemán y más idiomas</p>
           </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🔮</div>
+            <h3>Predicciones IA</h3>
+            <p>Predicción de problemas de tráfico y optimización de rutas</p>
+          </div>
         </div>
 
         <div className="cta-section">
-          <button 
-            onClick={() => setShowOCR(true)}
-            className="cta-button"
-          >
-            � Comenzar reconocimiento
-          </button>
+          <div className="cta-buttons">
+            <button 
+              onClick={() => setCurrentView('ocr')}
+              className="cta-button primary"
+            >
+              🔍 Comenzar OCR
+            </button>
+            <button 
+              onClick={() => setCurrentView('waze')}
+              className="cta-button secondary"
+            >
+              🚦 Análisis de Tráfico
+            </button>
+          </div>
           <p className="cta-description">¡Es gratis, rápido y funciona en tu navegador!</p>
         </div>
 
@@ -112,7 +158,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>✨ Powered by React + TypeScript + Tesseract.js</p>
+        <p>✨ Powered by React + TypeScript + Tesseract.js + Waze API + OpenAI</p>
       </footer>
     </div>
   )

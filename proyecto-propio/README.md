@@ -1,4 +1,42 @@
-# VisionText - OCR con IA
+# VisionText Pro - OCR + Análisis de Tráfico con IA
+
+Una aplicación web completa que combina **reconocimiento óptico de caracteres (OCR)** con **análisis inteligente de tráfico** en tiempo real. Utiliza **ChatGPT** para mejorar la precisión del OCR y generar insights avanzados sobre el tráfico urbano usando datos de Waze.
+
+## ✨ Características Principales
+
+### 🔍 **Módulo OCR**
+
+- 👁️‍🗨️ **Reconocimiento en tiempo real** - Captura y analiza texto al instante
+- 🧠 **IA Avanzada** - Powered by Tesseract.js + ChatGPT para máxima precisión
+- 🤖 **Mejora automática** - Corrección de errores OCR con inteligencia artificial
+- 📊 **Extracción de datos** - Convierte texto en información estructurada
+- 📋 **Clasificación inteligente** - Identifica automáticamente el tipo de documento
+
+### 🚦 **Módulo de Análisis de Tráfico (NUEVO)**
+
+- 📊 **Predicciones IA** - Problemas futuros de tráfico con ChatGPT
+- 🗺️ **Optimización de rutas** - Mejores caminos entre puntos
+- 😊 **Análisis de sentimientos** - Estado emocional del tráfico
+- 📈 **Patrones temporales** - Tendencias por hora/día/semana
+- 🌍 **Impacto urbano** - Efectos económicos y sociales
+- 🚨 **Alertas en tiempo real** - Accidentes, peligros, cierres de vía
+
+### 🎨 **Interfaz y Experiencia**
+
+- 📸 **Acceso directo a cámara** - Sin necesidad de subir archivos
+- ⚙️ **Altamente configurable** - Ajusta procesamiento según tu contenido
+- 🌐 **Multiidioma** - Soporte para español, inglés, francés, alemán
+- 📱 **Totalmente responsive** - Funciona en desktop y móvil
+- 🎨 **Tema claro/oscuro** - Diseño moderno y personalizable
+- 🔒 **100% privado** - Todo el procesamiento es local, sin servidores
+
+## 🚀 Inicio Rápido
+
+### Prerrequisitos
+
+- Node.js (versión 18 o superior)
+- npm o yarn
+- API Key de OpenAI (opcional, para funcionalidades de IA)on IA
 
 Una aplicación web moderna de reconocimiento óptico de caracteres (OCR) que utiliza inteligencia artificial para extraer texto de imágenes capturadas en tiempo real.
 
@@ -16,6 +54,7 @@ Una aplicación web moderna de reconocimiento óptico de caracteres (OCR) que ut
 ## 🚀 Inicio Rápido
 
 ### Prerrequisitos
+
 - Node.js (versión 18 o superior)
 - npm o yarn
 
@@ -61,9 +100,9 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default tseslint.config([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       // Other configs...
 
@@ -78,42 +117,42 @@ export default tseslint.config([
     ],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
     },
   },
-])
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
 
 export default tseslint.config([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       // Other configs...
       // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
+      reactX.configs["recommended-typescript"],
       // Enable lint rules for React DOM
       reactDom.configs.recommended,
     ],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
     },
   },
-])
+]);
 ```
 
 ## 🔍 **Funcionalidad OCR con IA**
@@ -121,10 +160,12 @@ export default tseslint.config([
 Esta aplicación incluye una potente funcionalidad de reconocimiento óptico de caracteres (OCR) que permite:
 
 ### 📷 **Métodos de entrada:**
+
 - **📸 Captura desde cámara web** - Reconocimiento en tiempo real
 - **📁 Carga de archivos** - Procesa imágenes guardadas (JPG, PNG, GIF, WEBP)
 
 ### 🚀 **Características avanzadas:**
+
 - **🔤 Reconocimiento multicarácter** - Letras, números, símbolos y palabras
 - **🎯 Marco de enfoque visual** - Guía para mejor captura
 - **📊 Medición de confianza** - Indica la precisión del reconocimiento
@@ -134,12 +175,14 @@ Esta aplicación incluye una potente funcionalidad de reconocimiento óptico de 
 - **🔒 Privacidad total** - Procesamiento local, sin servidores
 
 ### 🎛️ **Opciones de mejora:**
+
 - **Preprocesamiento** - Mejora contraste automáticamente
 - **Escalado 2x** - Aumenta resolución para texto pequeño
 - **Filtro de enfoque** - Mejora definición de bordes borrosos
 - **Modos de análisis** - Optimizado para diferentes tipos de texto
 
 ### 📋 **Cómo usar:**
+
 1. Elige entre **Cámara Web** o **Cargar Imagen**
 2. Si usas cámara: apunta al texto y haz clic en "Capturar y Analizar"
 3. Si cargas archivo: selecciona una imagen desde tu dispositivo
